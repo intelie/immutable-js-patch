@@ -1,0 +1,32 @@
+{
+  "name": "immutablepatch",
+  "version": "0.1.0",
+  "description": "Apply RFC 6902 style patches to Immutable.JS data structures",
+  "main": "src/patch.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "keywords": [
+    "immutable.js",
+    "diff",
+    "jsondiff"
+  ],
+  "author": "Intelie",
+  "license": "MIT",
+  "repository" : {
+    "type" : "git",
+    "url" : "http://github.com/intelie/immutable-js-patch.git"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.9",
+    "gulp-mocha": "^1.1.1",
+    "gulp-util": "^3.0.1",
+    "jscheck": "^0.2.0"
+  },
+  "dependencies": {
+    "immutable": "^3.0.2"
+  }
+}
