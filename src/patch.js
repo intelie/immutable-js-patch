@@ -21,7 +21,7 @@ var mapPatch = function(map, patches) {
 var sequencePatch = function (sequence, patches) {
   return sequence.withMutations(function (updateSeq) {
     patches.map(function(patch){
-      var pathArray = patch.get('path').split('/').slice(1).map(parseInt);
+      var pathArray = patch.get('path').split('/').slice(1).map(toInt);
       var op = patch.get('op');
 
       if(op === 'add' || op === 'replace'){
@@ -34,6 +34,9 @@ var sequencePatch = function (sequence, patches) {
   });
 };
 
+var toInt = function(n) {
+  return parseInt(n);
+};
 
 module.exports = function(immutableObject, patches){
   if(patches.count() === 0){ return immutableObject; }
