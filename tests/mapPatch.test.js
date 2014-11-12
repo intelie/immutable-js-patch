@@ -75,6 +75,18 @@ describe('Map patch', function() {
       assert.ok(Immutable.is(result, expected));
     });
 
+    it('creates nested map', function() {
+      var map = Immutable.fromJS({a: 1});
+      var ops = Immutable.fromJS([
+        {op: 'add', path: '/b/c', value: 2}
+      ]);
+
+      var result = patch(map, ops);
+      var expected = Immutable.fromJS({a: 1, b: {c: 2}});
+
+      assert.ok(Immutable.is(result, expected));
+    });
+
     it('replaces value in nested map', function() {
       var map = Immutable.fromJS({a: 1, b: {c: 3}});
       var ops = Immutable.fromJS([
