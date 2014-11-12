@@ -13,4 +13,16 @@ describe('Map patch', function () {
 
     assert.ok(Immutable.is(map, result));
   });
+
+  it('adds missing values in ops', function () {
+    var map = Immutable.Map();
+    var ops = Immutable.fromJS([
+      {op: 'add', path: '/a', value: 1}
+    ]);
+
+    var result = patch(map, ops);
+    var expected = Immutable.Map({a: 1});
+
+    assert.ok(Immutable.is(result, expected));
+  });
 });
