@@ -4,8 +4,8 @@ var Immutable = require('immutable');
 var assert = require('assert');
 var patch = require('../src/patch');
 
-describe('Map patch', function () {
-  it('returns same Map when ops are empty', function () {
+describe('Map patch', function() {
+  it('returns same Map when ops are empty', function() {
     var map = Immutable.Map({a: 1, b:2});
     var ops = Immutable.List();
 
@@ -14,7 +14,7 @@ describe('Map patch', function () {
     assert.ok(Immutable.is(map, result));
   });
 
-  it('adds missing value in empty map', function () {
+  it('adds missing value in empty map', function() {
     var map = Immutable.Map();
     var ops = Immutable.fromJS([
       {op: 'add', path: '/a', value: 1}
@@ -26,7 +26,7 @@ describe('Map patch', function () {
     assert.ok(Immutable.is(result, expected));
   });
 
-  it('adds missing value in map', function () {
+  it('adds missing value in map', function() {
     var map = Immutable.Map({a: 1});
     var ops = Immutable.fromJS([
       {op: 'add', path: '/b', value: 2}
@@ -38,7 +38,7 @@ describe('Map patch', function () {
     assert.ok(Immutable.is(result, expected));
   });
 
-  it('replaces value in map', function () {
+  it('replaces value in map', function() {
     var map = Immutable.Map({a: 1, b: 1});
     var ops = Immutable.fromJS([
       {op: 'replace', path: '/b', value: 2}
@@ -46,6 +46,18 @@ describe('Map patch', function () {
 
     var result = patch(map, ops);
     var expected = Immutable.Map({a: 1, b: 2});
+
+    assert.ok(Immutable.is(result, expected));
+  });
+  
+  it('removes value in map', function() {
+    var map = Immutable.Map({a: 1, b: 2});
+    var ops = Immutable.fromJS([
+      {op: 'remove', path: '/b'}
+    ]);
+
+    var result = patch(map, ops);
+    var expected = Immutable.Map({a: 1});
 
     assert.ok(Immutable.is(result, expected));
   });

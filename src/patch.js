@@ -8,8 +8,14 @@ var mapPatch = function(map, patches) {
   return map.withMutations(function(updateMap) {
     patches.map(function(patch){
       var pathArray = patch.get('path').split('/').slice(1);
+      var op = patch.get('op');
 
-      updateMap.setIn(pathArray, patch.get('value'));
+      if(op === 'add' || op === 'replace'){
+        updateMap.setIn(pathArray, patch.get('value'));
+      }
+      else if(op === 'remove'){
+        updateMap.removeIn(pathArray)
+      }
     });
   });
 };
