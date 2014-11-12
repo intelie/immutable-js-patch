@@ -61,4 +61,42 @@ describe('Map patch', function() {
 
     assert.ok(Immutable.is(result, expected));
   });
+
+  describe('nested maps', function() {
+    it('adds missing value in nested map', function() {
+      var map = Immutable.fromJS({a: 1, b: {c: 3}});
+      var ops = Immutable.fromJS([
+        {op: 'add', path: '/b/d', value: 4}
+      ]);
+
+      var result = patch(map, ops);
+      var expected = Immutable.fromJS({a: 1, b: {c: 3, d: 4}});
+
+      assert.ok(Immutable.is(result, expected));
+    });
+
+    it('replaces value in nested map', function() {
+      var map = Immutable.fromJS({a: 1, b: {c: 3}});
+      var ops = Immutable.fromJS([
+        {op: 'add', path: '/b/c', value: 4}
+      ]);
+
+      var result = patch(map, ops);
+      var expected = Immutable.fromJS({a: 1, b: {c: 4}});
+
+      assert.ok(Immutable.is(result, expected));
+    });
+
+    it('removes value in nested map', function() {
+      var map = Immutable.fromJS({a: 1, b: {c: 3, d: 4}});
+      var ops = Immutable.fromJS([
+        {op: 'remove', path: '/b/d'}
+      ]);
+
+      var result = patch(map, ops);
+      var expected = Immutable.fromJS({a: 1, b: {c: 3}});
+
+      assert.ok(Immutable.is(result, expected));
+    });
+  });
 });
