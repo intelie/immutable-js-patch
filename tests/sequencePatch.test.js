@@ -65,4 +65,58 @@ describe('Indexed sequence patch', function() {
     //assert.ok(Immutable.is(result, expected);
     assert.deepEqual(result.toJS(), expected.toJS())
   });
+
+  describe('nested sequences', function() {
+    it('adds missing value to nested seq', function () {
+      var list = Immutable.fromJS([1, 2, 3, [4, 5]]);
+      var ops = Immutable.fromJS([
+        {op: 'add', path: '/3/2', value: 6}
+      ]);
+
+      var result = patch(list, ops);
+      var expected = Immutable.List([1,2,3,[4,5,6]]);
+
+      assert.deepEqual(result.toJS(), expected.toJS());
+    });
+
+    it('adds values in empty list to nested seq', function () {
+      var list = Immutable.List();
+      var ops = Immutable.fromJS([
+        {op: 'add', path: '/0', value: 1},
+        {op: 'add', path: '/1', value: 2},
+        {op: 'add', path: '/2/0', value: 3}
+      ]);
+
+      var result = patch(list, ops);
+      var expected = Immutable.List([1,2,[3]]);
+
+      assert.deepEqual(result.toJS(), expected.toJS());
+    });
+
+    it('replaces old values to nested seq', function () {
+      var list = Immutable.fromJS([1,2,[3, 4]]);
+      var ops = Immutable.fromJS([
+        {op: 'replace', path: '/2/1', value: 10},
+      ]);
+
+      var result = patch(list, ops);
+      var expected = Immutable.List([1,2,[3,10]]);
+
+      assert.deepEqual(result.toJS(), expected.toJS());
+    });
+
+    it('removes values to nested seq', function () {
+      var list = Immutable.fromJS([1,2,3,[4, 5]]);
+      var ops = Immutable.fromJS([
+        {op: 'remove', path: '/3/1'}
+      ]);
+
+      var result = patch(list, ops);
+      var expected = Immutable.List([1,2,3,[4]]);
+
+      //TODO: investigate why Immutable.is does not work here.
+      //assert.ok(Immutable.is(result, expected);
+      assert.deepEqual(result.toJS(), expected.toJS())
+    });
+  });
 });
