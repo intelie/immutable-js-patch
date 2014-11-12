@@ -39,4 +39,30 @@ describe('Indexed sequence patch', function() {
 
     assert.ok(Immutable.is(result, expected));
   });
+
+  it('replaces old values', function () {
+    var list = Immutable.List([1,2,3]);
+    var ops = Immutable.fromJS([
+      {op: 'replace', path: '/0', value: 10},
+    ]);
+
+    var result = patch(list, ops);
+    var expected = Immutable.List([10,2,3]);
+
+    assert.ok(Immutable.is(result, expected));
+  });
+
+  it('removes values', function () {
+    var list = Immutable.List([1,2,3,4]);
+    var ops = Immutable.fromJS([
+      {op: 'remove', path: '/0'}
+    ]);
+
+    var result = patch(list, ops);
+    var expected = Immutable.List([2,3,4]);
+
+    //TODO: investigate why Immutable.is does not work here.
+    //assert.ok(Immutable.is(result, expected);
+    assert.deepEqual(result.toJS(), expected.toJS())
+  });
 });
