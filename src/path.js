@@ -1,3 +1,5 @@
+'use strict';
+
 var slashRe = new RegExp('/', 'g');
 var escapedSlashRe = new RegExp('~1', 'g');
 var tildeRe = /~/g;
