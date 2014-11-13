@@ -128,7 +128,7 @@ describe('Map patch', function() {
     it('replaces unescaped path', function() {
       var map = Immutable.fromJS({'a': 1, 'b': {'c': 3, 'prop/prop': 4}});
       var ops = Immutable.fromJS([
-        {op: 'add', path: '/b/prop~1prop', value: 10}
+        {op: 'replace', path: '/b/prop~1prop', value: 10}
       ]);
 
       var expected = Immutable.fromJS({'a': 1, 'b': {'c': 3, 'prop/prop': 10}});
