@@ -29,4 +29,12 @@ describe('Path', function() {
 
     assert.strictEqual(result, str);
   });
+
+  it('returns same string when escaping is not necessary', function() {
+    var str = 'normalstring';
+
+    var result = path.escape(str);
+
+    assert.strictEqual(result, str);
+  });
 });
