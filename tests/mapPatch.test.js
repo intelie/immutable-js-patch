@@ -111,4 +111,18 @@ describe('Map patch', function() {
       assert.ok(Immutable.is(result, expected));
     });
   });
+
+  describe('escaped paths', function() {
+    it('add unescaped path', function() {
+      var map = Immutable.fromJS({'a': 1, 'b': {'c': 3}});
+      var ops = Immutable.fromJS([
+        {op: 'add', path: '/b/prop~1prop', value: 4}
+      ]);
+
+      var expected = Immutable.fromJS({'a': 1, 'b': {'c': 3, 'prop/prop': 4}});
+      var result = patch(map, ops);
+
+      assert.ok(Immutable.is(result, expected));
+    });
+  });
 });
