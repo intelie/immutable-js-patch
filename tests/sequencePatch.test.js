@@ -43,7 +43,7 @@ describe('Indexed sequence patch', function() {
   it('replaces old values', function () {
     var list = Immutable.List([1,2,3]);
     var ops = Immutable.fromJS([
-      {op: 'replace', path: '/0', value: 10},
+      {op: 'replace', path: '/0', value: 10}
     ]);
 
     var result = patch(list, ops);
@@ -96,7 +96,7 @@ describe('Indexed sequence patch', function() {
     it('replaces old values to nested seq', function () {
       var list = Immutable.fromJS([1,2,[3, 4]]);
       var ops = Immutable.fromJS([
-        {op: 'replace', path: '/2/1', value: 10},
+        {op: 'replace', path: '/2/1', value: 10}
       ]);
 
       var result = patch(list, ops);
@@ -113,6 +113,58 @@ describe('Indexed sequence patch', function() {
 
       var result = patch(list, ops);
       var expected = Immutable.fromJS([1,2,3,[4]]);
+
+      assert.ok(Immutable.is(result, expected));
+    });
+  });
+
+  describe('nested maps', function() {
+    it('adds missing value to nested map', function () {
+      var list = Immutable.fromJS([1, 2, 3, [{a: 1}]]);
+      var ops = Immutable.fromJS([
+        {op: 'add', path: '/3/0/b', value: 10}
+      ]);
+
+      var result = patch(list, ops);
+      var expected = Immutable.fromJS([1, 2, 3, [{a: 1, b: 10}]]);
+
+      assert.ok(Immutable.is(result, expected));
+    });
+
+    it('adds values in empty list to nested map', function () {
+      var list = Immutable.List();
+      var ops = Immutable.fromJS([
+        {op: 'add', path: '/0', value: Immutable.fromJS({a: 1})},
+        {op: 'add', path: '/1', value: Immutable.fromJS({a: 2})},
+        {op: 'add', path: '/2/0', value: Immutable.fromJS({a: 3})}
+      ]);
+
+      var result = patch(list, ops);
+      var expected = Immutable.fromJS([{a:1}, {a:2},[{a:3}]]);
+
+      assert.ok(Immutable.is(result, expected));
+    });
+
+    it('replaces old values to nested map', function () {
+      var list = Immutable.fromJS([1, 2, 3, [{a: 1}]]);
+      var ops = Immutable.fromJS([
+        {op: 'add', path: '/3/0/a', value: 10}
+      ]);
+
+      var result = patch(list, ops);
+      var expected = Immutable.fromJS([1, 2, 3, [{a: 10}]]);
+
+      assert.ok(Immutable.is(result, expected));
+    });
+
+    it('removes values from nested map', function () {
+      var list = Immutable.fromJS([1, 2, 3, [{a: 1, b: 10}]]);
+      var ops = Immutable.fromJS([
+        {op: 'remove', path: '/3/0/b'}
+      ]);
+
+      var result = patch(list, ops);
+      var expected = Immutable.fromJS([1, 2, 3, [{a: 1}]]);
 
       assert.ok(Immutable.is(result, expected));
     });
