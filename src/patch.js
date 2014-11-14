@@ -36,7 +36,8 @@ var sequencePatch = function (sequence, patches) {
 };
 
 var toInt = function(n) {
-  return parseInt(n);
+  var int = parseInt(n);
+  return isNaN(int) ? n : int;
 };
 
 module.exports = function(immutableObject, patches){
