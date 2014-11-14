@@ -22,7 +22,7 @@ var mapPatch = function(map, patches) {
 var sequencePatch = function (sequence, patches) {
   return sequence.withMutations(function (updateSeq) {
     patches.map(function(patch){
-      var pathArray = patch.get('path').split('/').slice(1).map(toInt);
+      var pathArray = patch.get('path').split('/').slice(1).map(parsePath);
       var op = patch.get('op');
 
       if(op === 'add' || op === 'replace'){
@@ -35,9 +35,13 @@ var sequencePatch = function (sequence, patches) {
   });
 };
 
-var toInt = function(n) {
+var tryParseInt = function(n) {
   var int = parseInt(n);
   return isNaN(int) ? n : int;
+};
+
+var parsePath = function(n){
+  return tryParseInt(path.unescape(n));
 };
 
 module.exports = function(immutableObject, patches){

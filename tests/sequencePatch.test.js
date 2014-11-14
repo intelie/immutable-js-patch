@@ -168,5 +168,43 @@ describe('Indexed sequence patch', function() {
 
       assert.ok(Immutable.is(result, expected));
     });
+
+    describe('nested maps with escaped paths', function() {
+      it('add unescaped path', function() {
+        var map = Immutable.fromJS([{a: 1}, {'b': 2}]);
+        var ops = Immutable.fromJS([
+          {op: 'add', path: '/2/prop~1prop', value: 3}
+        ]);
+
+        var expected = Immutable.fromJS([{a: 1}, {'b': 2}, {'prop/prop': 3}]);
+        var result = patch(map, ops);
+
+        assert.ok(Immutable.is(result, expected));
+      });
+
+      it('replaces unescaped path', function() {
+        var map = Immutable.fromJS([{a: 1}, {'prop/prop': 2}]);
+        var ops = Immutable.fromJS([
+          {op: 'replace', path: '/1/prop~1prop', value: 10}
+        ]);
+
+        var expected = Immutable.fromJS([{a: 1}, {'prop/prop': 10}]);
+        var result = patch(map, ops);
+
+        assert.ok(Immutable.is(result, expected));
+      });
+
+      it('removes unescaped path', function() {
+        var map = Immutable.fromJS([{a: 1}, {b: 2, 'prop/prop': 2}]);
+        var ops = Immutable.fromJS([
+          {op: 'remove', path: '/1/prop~1prop'}
+        ]);
+
+        var expected = Immutable.fromJS([{a: 1}, {b: 2}]);
+        var result = patch(map, ops);
+
+        assert.ok(Immutable.is(result, expected));
+      });
+    });
   });
 });
