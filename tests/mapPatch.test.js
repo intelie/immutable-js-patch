@@ -149,4 +149,54 @@ describe('Map patch', function() {
       assert.ok(Immutable.is(result, expected));
     });
   });
+
+  describe('patch nested sequences', function() {
+    it('adds missing value in nested sequence', function() {
+      var map = Immutable.fromJS({a: 1, b: [1,2,3]});
+      var ops = Immutable.fromJS([
+        {op: 'add', path: '/b/3', value: 4}
+      ]);
+
+      var result = patch(map, ops);
+      var expected = Immutable.fromJS({a: 1, b: [1,2,3,4]});
+
+      assert.ok(Immutable.is(result, expected));
+    });
+
+    it('adds nested sequence', function() {
+      var map = Immutable.fromJS({a: 1});
+      var ops = Immutable.fromJS([
+        {op: 'add', path: '/b', value: Immutable.List([1])}
+      ]);
+
+      var result = patch(map, ops);
+      var expected = Immutable.fromJS({a: 1, b: [1]});
+
+      assert.ok(Immutable.is(result, expected));
+    });
+
+    it('replaces value in nested sequence', function() {
+      var map = Immutable.fromJS({a: 1, b: [1,2,3]});
+      var ops = Immutable.fromJS([
+        {op: 'add', path: '/b/2', value: 4}
+      ]);
+
+      var result = patch(map, ops);
+      var expected = Immutable.fromJS({a: 1, b: [1,2,4]});
+
+      assert.ok(Immutable.is(result, expected));
+    });
+
+    it('removes value in nested sequence', function() {
+      var map = Immutable.fromJS({a: 1, b: [1,2,3]});
+      var ops = Immutable.fromJS([
+        {op: 'remove', path: '/b/2'}
+      ]);
+
+      var result = patch(map, ops);
+      var expected = Immutable.fromJS({a: 1, b: [1,2]});
+
+      assert.ok(Immutable.is(result, expected));
+    });
+  });
 });
