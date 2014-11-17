@@ -169,6 +169,22 @@ describe('Indexed sequence patch', function() {
       assert.ok(Immutable.is(result, expected));
     });
 
+    it('patch nested maps in empty lists', function() {
+      var list = Immutable.List();
+      var ops = Immutable.fromJS([
+        {op: 'add', path: '/0', value: 1},
+        {op: 'add', path: '/1', value: 2},
+        {op: 'add', path: '/2', value: 3},
+        {op: 'add', path: '/3/0/a', value: 1},
+        {op: 'add', path: '/3/0/b', value: 10}
+      ]);
+
+      var result = patch(list, ops);
+      var expected = Immutable.fromJS([1, 2, 3, [{a: 1, b: 10}]]);
+
+      assert.ok(Immutable.is(result, expected));
+    });
+
     describe('nested maps with escaped paths', function() {
       it('add unescaped path', function() {
         var map = Immutable.fromJS([{a: 1}, {'b': 2}]);

@@ -26,7 +26,7 @@ describe('Map patch', function() {
     }
   });
 
-  it('patches diff between to objects', function () {
+  it('patches diff between two objects', function () {
     JSC.test(
       'patches diff between two maps',
       function(veredict, obj1, obj2){
@@ -69,7 +69,6 @@ describe('Map patch', function() {
 
         var equal = Immutable.is(patched, list2);
 
-
         return veredict(equal);
       },
       [
@@ -82,6 +81,61 @@ describe('Map patch', function() {
         }
         for(var i = 0; i < array2.length; i++){
           if(array2[i] === undefined){ return false; }
+        }
+        return 'ok';
+      }
+    );
+
+    JSC.test(
+      'patches diff between empty list and existing list',
+      function(veredict, array1){
+        var list1 = Immutable.List();
+        var list2 = Immutable.fromJS(array1);
+
+        var diffResult = diff(list1, list2);
+
+        var patched = patch(list1, diffResult);
+
+        var equal = Immutable.is(patched, list2);
+
+        return veredict(equal);
+      },
+      [
+        JSC.array(10)
+      ],
+      function(array1){
+        for(var i = 0; i < array1.length; i++){
+          if(array1[i] === undefined){ return false; }
+          if(typeof(array1[i]) === "object"){
+            for(var key in array1[i]){
+              if(array1[i][key] == null){ return false; }
+            }
+          }
+        }
+        return 'ok';
+      }
+    );
+
+    JSC.test(
+      'patches diff between empty map and existing map',
+      function(veredict, obj){
+        var map1 = Immutable.Map();
+        var map2 = Immutable.fromJS(obj);
+
+        var diffResult = diff(map1, map2);
+
+        var patched = patch(map1, diffResult);
+
+        var equal = Immutable.is(patched, map2);
+
+        return veredict(equal);
+      },
+      [
+        JSC.object(10)
+      ],
+      function(obj){
+        for(var key in obj){
+          if(obj[key] === undefined){ return false; }
         }
         return 'ok';
       }
