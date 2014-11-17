@@ -1,6 +1,6 @@
 {
   "name": "immutablepatch",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Apply RFC 6902 style patches to Immutable.JS data structures",
   "main": "src/patch.js",
   "directories": {
