@@ -52,6 +52,17 @@ var sequencePatch = function (sequence, patches) {
   return updateSeq;
 };
 
+var primitivePatch = function (value, patches) {
+  var op = patches.get(0).get('op');
+
+  if(op === 'add' || op === 'replace'){
+    return patches.get(0).get('value');
+  }
+  else if (op === 'remove'){
+    return null;
+  }
+};
+
 var tryParseInt = function(n) {
   var int = parseInt(n);
   return isNaN(int) ? n : int;
@@ -61,13 +72,16 @@ var parsePath = function(n){
   return tryParseInt(path.unescape(n));
 };
 
-module.exports = function(immutableObject, patches){
-  if(patches.count() === 0){ return immutableObject; }
+module.exports = function(value, patches){
+  if(patches.count() === 0){ return value; }
 
-  if(Immutable.Iterable.isKeyed(immutableObject)){
-    return mapPatch(immutableObject, patches);
+  if(Immutable.Iterable.isKeyed(value)){
+    return mapPatch(value, patches);
+  }
+  else if(Immutable.Iterable.isIndexed(value)){
+    return sequencePatch(value, patches);
   }
   else{
-    return sequencePatch(immutableObject, patches);
+    return primitivePatch(value, patches);
   }
 };
