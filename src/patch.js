@@ -19,20 +19,37 @@ var mapPatch = function(map, patches) {
   });
 };
 
+/**
+ * TODO: use `withMutations` when this gets fixed:
+ * https://github.com/facebook/immutable-js/issues/196
+ */
 var sequencePatch = function (sequence, patches) {
-  return sequence.withMutations(function (updateSeq) {
-    patches.map(function(patch){
-      var pathArray = patch.get('path').split('/').slice(1).map(parsePath);
-      var op = patch.get('op');
+  var updateSeq = sequence;
+  patches.map(function(patch){
+    var pathArray = patch.get('path').split('/').slice(1).map(parsePath);
+    var op = patch.get('op');
 
-      if(op === 'add' || op === 'replace'){
-        updateSeq.setIn(pathArray, patch.get('value'));
+    if(op === 'add'){
+      var parentPath = pathArray.slice(0, -1);
+      var parent = updateSeq.getIn(parentPath);
+      if(Immutable.Iterable.isIndexed(parent)){
+        updateSeq = updateSeq.updateIn(parentPath, function(list){
+          return list.splice(pathArray[pathArray.length-1], 0, patch.get('value'));
+        });
       }
-      else if(op === 'remove'){
-        updateSeq.removeIn(pathArray)
+      else{
+        updateSeq = updateSeq.setIn(pathArray, patch.get('value'));
       }
-    });
+    }
+    else if(op === 'replace'){
+      updateSeq = updateSeq.setIn(pathArray, patch.get('value'));
+    }
+    else if(op === 'remove'){
+      updateSeq = updateSeq.removeIn(pathArray)
+    }
   });
+
+  return updateSeq;
 };
 
 var tryParseInt = function(n) {
