@@ -28,6 +28,6 @@
     "jscheck": "^0.2.0"
   },
   "dependencies": {
-    "immutable": "^3.0.3"
+    "immutable": "^3.2.1"
   }
 }
