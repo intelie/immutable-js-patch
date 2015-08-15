@@ -49,7 +49,7 @@ describe('Map patch', function() {
 
     assert.ok(Immutable.is(result, expected));
   });
-  
+
   it('removes value in map', function() {
     var map = Immutable.Map({a: 1, b: 2});
     var ops = Immutable.fromJS([
@@ -178,7 +178,7 @@ describe('Map patch', function() {
     it('replaces value in nested sequence', function() {
       var map = Immutable.fromJS({a: 1, b: [1,2,3]});
       var ops = Immutable.fromJS([
-        {op: 'add', path: '/b/2', value: 4}
+        {op: 'replace', path: '/b/2', value: 4}
       ]);
 
       var result = patch(map, ops);
