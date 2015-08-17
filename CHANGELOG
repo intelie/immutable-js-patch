@@ -1,0 +1,13 @@
+# CHANGELOG
+
+## v0.2.1 17/08/2015
+
+- fixed: bug that caused an `add` operation in a diff to result in a value being replaced.
+
+## v0.2.0 17/11/2014
+
+- added: patching primitive types
+
+## v0.1.0 17/11/2014
+
+- first release
