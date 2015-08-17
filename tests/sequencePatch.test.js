@@ -35,7 +35,6 @@ describe('Indexed sequence patch', function() {
     var result = patch(list, ops);
     var expected = Immutable.fromJS({a: [1,'x',2,3,4]})
 
-    console.log(result, expected)
     assert.ok(Immutable.is(result, expected));
   });
 

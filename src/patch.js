@@ -8,11 +8,7 @@ var tryParseInt = function(n) {
   return isNaN(int) ? n : int;
 };
 
-var parsePath = function(n) {
-  return tryParseInt(path.unescape(n));
-};
-
-var primitivePatch = function (primitive, firstPath, restPath, op, value) {
+var primitivePatch = function (op, value) {
   if (op === 'add' || op === 'replace') {
     return value;
   } else if (op === 'remove') {
@@ -37,25 +33,26 @@ var mapPatch = function(map, firstPath, restPath, op, value) {
       return map.remove(firstPath);
     }
   } else {
-    throw new Error('map patch Error, unknown op: ' + op)
+    throw new Error('map patch Error, unknown op: ' + op);
   }
 };
 
 var sequencePatch = function(sequence, firstPath, restPath, op, value) {
+  firstPath = tryParseInt(firstPath);
   if (op === 'add') {
     if (sequence.get(firstPath) === undefined) {
       if (restPath.length > 0) {
         var baseValue = (restPath[0].match(/^\d+$/)) ? Immutable.List() : Immutable.Map();
         return sequence.set(firstPath, anyPatch(baseValue, restPath, op, value));
       } else {
-        // return sequence.splice(firstPath, 1, anyPatch(undefined, restPath, op, value));
-        return sequence.splice(firstPath, 1, value);
+        // special case, return the value
+        return sequence.splice(firstPath, 0, value);
       }
     } else {
       if (restPath.length > 0) {
         return sequence.set(firstPath, anyPatch(sequence.get(firstPath), restPath, op, value));
       } else {
-        // return sequence.splice(firstPath, 0, anyPatch(sequence.get(firstPath), restPath, op, value));
+        // special case, return the value
         return sequence.splice(firstPath, 0, value);
       }
     }
@@ -65,28 +62,29 @@ var sequencePatch = function(sequence, firstPath, restPath, op, value) {
     if (restPath.length > 0) {
       return sequence.set(firstPath, anyPatch(sequence.get(firstPath), restPath, op, value));
     } else {
-      return sequence.remove(parseInt(firstPath));
+      return sequence.remove(firstPath);
     }
   } else {
-    throw new Error('sequence patch Error, unknown op: ' + op)
+    throw new Error('sequence patch Error, unknown op: ' + op);
   }
 };
 
 var anyPatch = function(any, pathArray, op, value) {
+  var firstPath, restPath;
 
   if (Immutable.Iterable.isKeyed(any)) {
     if (pathArray.length === 0) { return any; }
-    var firstPath = pathArray[0];
-    var restPath = pathArray.slice(1);
+    firstPath = pathArray[0];
+    restPath = pathArray.slice(1);
     return mapPatch(any, firstPath, restPath, op, value);
   } else if (Immutable.Iterable.isIndexed(any)) {
     if (pathArray.length === 0) { return any; }
-    var firstPath = pathArray[0];
-    var restPath = pathArray.slice(1);
+    firstPath = pathArray[0];
+    restPath = pathArray.slice(1);
     return sequencePatch(any, firstPath, restPath, op, value);
   } else {
     if (pathArray.length === 0) { return value; }
-    return primitivePatch(any, firstPath, restPath, op, value);
+    return primitivePatch(op, value);
   }
 };
 
@@ -98,6 +96,6 @@ var eachPatch = function(value, patches) {
   var pathArray = firstPatch.get('path').split('/').slice(1).map(path.unescape);
   var result = anyPatch(value, pathArray, firstPatch.get('op'), firstPatch.get('value'));
   return eachPatch(result, restPatches);
-}
+};
 
 module.exports = eachPatch;
