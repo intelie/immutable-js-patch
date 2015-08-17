@@ -26,6 +26,18 @@ describe('Indexed sequence patch', function() {
     assert.ok(Immutable.is(result, expected));
   });
 
+  it('adds value among a list', function () {
+    var list = Immutable.fromJS({a: [1, 2, 3, 4]})
+    var ops = Immutable.fromJS([
+      {op: 'add', path: '/a/1', value: 'x'}
+    ]);
+
+    var result = patch(list, ops);
+    var expected = Immutable.fromJS({a: [1,'x',2,3,4]})
+
+    assert.ok(Immutable.is(result, expected));
+  });
+
   it('adds values in empty list', function () {
     var list = Immutable.List();
     var ops = Immutable.fromJS([
