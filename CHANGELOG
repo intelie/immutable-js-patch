@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.2.2 25/08/2015
+
+- fixed: fix bug when patching shallow values
+
 ## v0.2.1 17/08/2015
 
 - fixed: bug that caused an `add` operation in a diff to result in a value being replaced.
