@@ -25,7 +25,11 @@ var mapPatch = function(map, firstPath, restPath, op, value) {
       return map.set(firstPath, anyPatch(map.get(firstPath), restPath, op, value));
     }
   } else if (op === 'replace') {
-    return map.set(firstPath, anyPatch(map.get(firstPath), restPath, op, value));
+    if (restPath.length > 0) {
+      return map.set(firstPath, anyPatch(map.get(firstPath), restPath, op, value));
+    } else {
+      return map.set(firstPath, value);
+    }
   } else if (op === 'remove') {
     if (restPath.length > 0) {
       return map.set(firstPath, anyPatch(map.get(firstPath), restPath, op, value));
@@ -57,7 +61,11 @@ var sequencePatch = function(sequence, firstPath, restPath, op, value) {
       }
     }
   } else if (op === 'replace') {
-    return sequence.set(firstPath, anyPatch(sequence.get(firstPath), restPath, op, value));
+    if (restPath.length > 0) {
+      return sequence.set(firstPath, anyPatch(sequence.get(firstPath), restPath, op, value));
+    } else {
+      return sequence.set(firstPath, value);
+    }
   } else if (op === 'remove') {
     if (restPath.length > 0) {
       return sequence.set(firstPath, anyPatch(sequence.get(firstPath), restPath, op, value));
