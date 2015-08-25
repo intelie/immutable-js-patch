@@ -199,4 +199,19 @@ describe('Map patch', function() {
       assert.ok(Immutable.is(result, expected));
     });
   });
+
+  describe('pacthes shallow value', function() {
+    it('replaces shallow value', function() {
+      var a = Immutable.fromJS({"role":"user","store":[]})
+      var ops = Immutable.fromJS([
+        {"op":"replace","path":"/role","value":"admin"},
+        {"op":"replace","path":"/store","value":2}
+      ]);
+
+      var result = patch(a, ops);
+      var expected = Immutable.fromJS({"role":"admin","store":2});
+
+      assert.ok(Immutable.is(result, expected));
+    })
+  });
 });
