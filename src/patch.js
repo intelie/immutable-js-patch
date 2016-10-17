@@ -97,13 +97,13 @@ var anyPatch = function(any, pathArray, op, value) {
 };
 
 var eachPatch = function(value, patches) {
-  if (patches.count() === 0) { return value; }
-  var firstPatch = patches.get(0);
-  var restPatches = patches.slice(1);
-
-  var pathArray = firstPatch.get('path').split('/').slice(1).map(path.unescape);
-  var result = anyPatch(value, pathArray, firstPatch.get('op'), firstPatch.get('value'));
-  return eachPatch(result, restPatches);
+  while (patches.size) {
+    var firstPatch = patches.get(0);
+    var patches = patches.slice(1);
+    var pathArray = firstPatch.get('path').split('/').slice(1).map(path.unescape);
+    value = anyPatch(value, pathArray, firstPatch.get('op'), firstPatch.get('value'));
+  }
+  return value;
 };
 
 module.exports = eachPatch;
