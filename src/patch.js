@@ -96,7 +96,7 @@ var anyPatch = function(any, pathArray, op, value) {
   }
 };
 
-var eachPatch = function(value, patches) {
+var eachPatchInternal = function(value, patches) {
   while (patches.size) {
     var firstPatch = patches.get(0);
     var patches = patches.slice(1);
@@ -104,6 +104,16 @@ var eachPatch = function(value, patches) {
     value = anyPatch(value, pathArray, firstPatch.get('op'), firstPatch.get('value'));
   }
   return value;
+};
+
+var eachPatch = function(value, patches) {
+  if (patches.size === 1) {
+    var onlyPatch = patches.get(0);
+    if (onlyPatch.get('op') === 'replace' && onlyPatch.get('path') === '/') {
+      return onlyPatch.get('value');
+    }
+  }
+  return eachPatchInternal(value, patches);
 };
 
 module.exports = eachPatch;
