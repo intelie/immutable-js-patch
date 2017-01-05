@@ -107,3 +107,4 @@ var eachPatch = function(value, patches) {
 };
 
 module.exports = eachPatch;
+module.exports.default = eachPatch;
