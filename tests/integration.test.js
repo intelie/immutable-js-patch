@@ -6,6 +6,19 @@ var JSC = require('jscheck');
 var diff = require('immutablediff');
 var patch = require('../src/patch');
 
+
+describe('replacing root value', function() {
+
+  it('should replace with 0', function() {
+    assert.strictEqual(
+      patch(Immutable.Map(), Immutable.fromJS([
+        {op:'replace', path: '/', value: 0}
+      ])),
+      0);
+
+  });
+});
+
 describe('Map patch', function() {
   var failure = null;
 
