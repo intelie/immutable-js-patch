@@ -116,5 +116,5 @@ var eachPatch = function(value, patches) {
   return eachPatchInternal(value, patches);
 };
 
+eachPatch.default = eachPatch;
 module.exports = eachPatch;
-module.exports.default = eachPatch;
