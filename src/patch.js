@@ -49,6 +49,10 @@ var sequencePatch = function(sequence, firstPath, restPath, op, value) {
         var baseValue = (restPath[0].match(/^\d+$/)) ? Immutable.List() : Immutable.Map();
         return sequence.set(firstPath, anyPatch(baseValue, restPath, op, value));
       } else {
+        // special case, add to the end
+        if (firstPath === '-') {
+          return sequence.splice(sequence.size, 0, value);
+        }
         // special case, return the value
         return sequence.splice(firstPath, 0, value);
       }

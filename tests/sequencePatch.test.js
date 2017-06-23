@@ -52,6 +52,17 @@ describe('Indexed sequence patch', function() {
     assert.ok(Immutable.is(result, expected));
   });
 
+  it('adds value to end', function () {
+    var list = Immutable.List([1, 2, 3]);
+    var ops = Immutable.fromJS([
+      {op: 'add', path: '/-', value: 4}
+    ]);
+
+    var result = patch(list, ops);
+    var expected = Immutable.List([1,2,3,4]);
+    assert.ok(Immutable.is(result, expected));
+  });
+
   it('replaces old values', function () {
     var list = Immutable.List([1,2,3]);
     var ops = Immutable.fromJS([
@@ -88,6 +99,17 @@ describe('Indexed sequence patch', function() {
       var result = patch(list, ops);
       var expected = Immutable.fromJS([1,2,3,[4,5,6]]);
 
+      assert.ok(Immutable.is(result, expected));
+    });
+
+    it('adds value to nested seq end', function () {
+      var list = Immutable.fromJS([1, 2, 3, [4, 5]]);
+      var ops = Immutable.fromJS([
+        {op: 'add', path: '/3/-', value: 6}
+      ]);
+
+      var result = patch(list, ops);
+      var expected = Immutable.fromJS([1,2,3,[4,5,6]]);
       assert.ok(Immutable.is(result, expected));
     });
 
