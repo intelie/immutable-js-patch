@@ -30,7 +30,7 @@
     "immutablediff": "^0.3.2",
     "jscheck": "^0.2.0"
   },
-  "dependencies": {
-    "immutable": "^3.2.1"
+  "peerDependencies": {
+    "immutable": "*"
   }
 }
